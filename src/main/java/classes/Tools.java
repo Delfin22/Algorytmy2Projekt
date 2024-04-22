@@ -1,4 +1,8 @@
 package classes;
+
+import java.util.ArrayList;
+import java.util.List;
+
 public class Tools {
     public static double calculateDet(Point p1, Point p2, Point p3){
         double result;
@@ -14,5 +18,12 @@ public class Tools {
                 p3.getY()*p1.getX() -
                 p1.getY()*p2.getX();
         return result;
+    }
+    private static List<Double> sortViaDegree(List<Double> list){
+        return list;
+    }
+    public static List<Double> createConvexHull(List <Double> list){
+        List<Double> returnList = new ArrayList<>();
+        return returnList;
     }
 }
