@@ -19,11 +19,51 @@ public class Tools {
                 p1.getY()*p2.getX();
         return result;
     }
-    private static List<Double> sortViaDegree(List<Double> list){
+    public static List<Point> sortViaDegree(List<Point> list){
+        List<Point> returnList = new ArrayList<>();
+
+        Point minPoint = new Point();
+
+        minPoint.setY(list.get(0).getY());
+
+        //Looking for s point with lowest Y value
+        for(Point p : list){
+            if(p.getY() < minPoint.getY()){
+                minPoint.setY(p.getY());
+                minPoint.setX(p.getX());
+            }else if(p.getY() == minPoint.getY()) {
+                if(p.getX() < minPoint.getX()){
+                    minPoint.setY(p.getY());
+                    minPoint.setX(p.getX());
+                }
+            }
+        }
+
+        double shiftX = minPoint.getX(), shiftY = minPoint.getY();
+
+        minPoint.setX(0);
+        minPoint.setY(0);
+
+        //Shifting the coordinate system
+        for(Point p : list){
+            p.setX(p.getX() - shiftX);
+            p.setY(p.getY() - shiftY);
+        }
+
+        System.out.println(minPoint);
+        System.out.println(shiftX + " " + shiftY);
+
+        System.out.println("After shift....");
+
+        for(Point p : list){
+            System.out.println(p);
+        }
+
         return list;
     }
-    public static List<Double> createConvexHull(List <Double> list){
-        List<Double> returnList = new ArrayList<>();
+    public static List<Point> createConvexHull(List <Point> list){
+        List<Point> returnList = new ArrayList<>();
+
         return returnList;
     }
 }
