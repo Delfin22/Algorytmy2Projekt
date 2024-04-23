@@ -1,2 +1,9 @@
-# Algorytmy2Projekt
-Grupa Cezary Arszyński, Kacper Urbański, Karol Dołasiński
+# Atak z trzeciego wymiaru
+
+![Kraina placzakow](images/plansza.png)
+
+# Autorzy
+
+* Cezary Arszyński
+* Kacper Urbański
+* Karol Dołasiński
