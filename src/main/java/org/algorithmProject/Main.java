@@ -1,4 +1,4 @@
-package org.example;
+package org.algorithmProject;
 
 import classes.Point;
 import classes.PointGenerator;
