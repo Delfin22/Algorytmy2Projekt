@@ -11,7 +11,6 @@ public class ToolsTest {
         Point p2 = new Point(3,4);
         Point p3 = new Point(5,6);
         Assertions.assertEquals(0, Tools.calculateDet(p1,p2,p3),0);
-
         p1 = new Point(3,5);
         p2 = new Point(4,1);
         p3 = new Point(12,6);
