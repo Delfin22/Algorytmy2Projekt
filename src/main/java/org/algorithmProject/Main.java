@@ -1,8 +1,7 @@
 package org.algorithmProject;
-
-import classes.Point;
-import classes.PointGenerator;
-import classes.Tools;
+import classes.problem1.Point;
+import classes.problem1.PointGenerator;
+import classes.problem1.PointsTools;
 import swing.components.FrameComponent;
 
 import java.util.List;
@@ -14,6 +13,7 @@ public class Main {
         for(Point p : list){
             System.out.println(p);
         }
-        Tools.sortViaDegree(list);
+        PointsTools.sortViaDegree(list);
+
     }
 }

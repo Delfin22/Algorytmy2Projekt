@@ -1,6 +1,6 @@
 package swing.components;
 
-import classes.Point;
+import classes.problem1.Point;
 
 import javax.swing.*;
 import java.util.List;

@@ -1,4 +1,4 @@
-package classes;
+package classes.problem1;
 
 public class Point {
     private double x,y;

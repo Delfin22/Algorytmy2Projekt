@@ -1,9 +1,9 @@
-package classes;
+package classes.problem1;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Tools {
+public class PointsTools {
     public static double calculateDet(Point p1, Point p2, Point p3){
         double result;
 

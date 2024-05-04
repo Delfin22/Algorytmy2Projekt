@@ -1,4 +1,6 @@
-package classes;
+package classes.problem1;
+
+import classes.problem1.Point;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -6,7 +8,7 @@ import java.util.List;
 import java.util.Random;
 
 public class PointGenerator {
-    public static List<Point> createWorld(int numPoints,int borderX, int borderY){
+    public static List<Point> createWorld(int numPoints, int borderX, int borderY){
         Random random = new Random();
         Point point;
         List<Point> list = new ArrayList<>(numPoints);
