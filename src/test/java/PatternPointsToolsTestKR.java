@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.OptionalDouble;
 
-public class PatternPointsToolsTest {
+public class PatternPointsToolsTestKR {
 
     @Test
     public void patternSearchKRTest(){
