@@ -1,7 +1,6 @@
 package classes.problem1;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.*;
 
 public class PointsTools {
     public static double calculateDet(Point p1, Point p2, Point p3){
@@ -19,14 +18,24 @@ public class PointsTools {
                 p1.getY()*p2.getX();
         return result;
     }
-    public static List<Point> sortViaDegree(List<Point> list){
+    static class PointAngleComparator implements Comparator<Point> {
+        @Override
+        public int compare(Point a, Point b) {
+
+            double angleOfA = Math.atan2(a.getY(), a.getX());
+            double angleOfB = Math.atan2(b.getY(), b.getX());
+
+            return angleOfA < angleOfB ? -1 : 1;
+        }
+    }
+    public static List<Point> findConvexHull(List<Point> list){
         List<Point> returnList = new ArrayList<>();
 
         Point minPoint = new Point();
 
-        minPoint.setY(list.get(0).getY());
+        minPoint.setY(list.getFirst().getY());
 
-        //Looking for s point with lowest Y value
+        //Looking for a point with the lowest Y value
         for(Point p : list){
             if(p.getY() < minPoint.getY()){
                 minPoint.setY(p.getY());
@@ -50,20 +59,14 @@ public class PointsTools {
             p.setY(p.getY() - shiftY);
         }
 
-        System.out.println(minPoint);
-        System.out.println(shiftX + " " + shiftY);
-
-        System.out.println("After shift....");
+        //Sorting by angle
+        Collections.sort(list, new PointAngleComparator());
 
         for(Point p : list){
+            //System.out.println(Math.atan2(p.getY(), p.getX()));
             System.out.println(p);
         }
 
         return list;
-    }
-    public static List<Point> createConvexHull(List <Point> list){
-        List<Point> returnList = new ArrayList<>();
-
-        return returnList;
     }
 }

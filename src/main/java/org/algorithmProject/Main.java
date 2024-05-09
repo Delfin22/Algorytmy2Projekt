@@ -14,7 +14,7 @@ public class Main {
         for(Point p : list){
             System.out.println(p);
         }
-        PointsTools.sortViaDegree(list);
+        PointsTools.findConvexHull(list);
 
 
         String text = "kjjnbo limodsarfizmasmlkd boliassabolisad";
