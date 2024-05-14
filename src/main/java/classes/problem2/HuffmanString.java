@@ -1,5 +1,7 @@
 package classes.problem2;
 
+import classes.problem2.patternSearchAlgorithms.PatternTools;
+
 import java.util.ArrayList;
 import java.util.Collections;
 

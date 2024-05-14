@@ -1,4 +1,5 @@
-import classes.problem2.PatternTools;
+import classes.problem2.patternSearchAlgorithms.KnuthMorrisPratt;
+import classes.problem2.patternSearchAlgorithms.PatternTools;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
@@ -6,33 +7,34 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.OptionalDouble;
 
-public class PatternToolsTestBM {
+public class KnuthMorrisPrattTest {
     @Test
     public void patternSearchBMTest(){
         String pattern = "boli";
-        String s1 = "kjjnbo limodsarfizmasmlkd boliassabolisad";
+        String s1 = "kjjnbolimodsarfizmasmlkdboliassabolisad";
         String emptyString = "";
 
         List<Integer> list = new ArrayList<>(3);
-        list.add(26);
-        list.add(34);
+        list.add(4);
+        list.add(24);
+        list.add(32);
         //Searching "boli". Expected at indexes above.
-        Assertions.assertEquals(list, PatternTools.patternSearchBM(s1, pattern));
+        Assertions.assertEquals(list, KnuthMorrisPratt.patternSearch(s1, pattern));
 
         List<Integer> list1 = new ArrayList<>(1);
         list1.add(0);
         //Searching text in text - expected at index 0
-        Assertions.assertEquals(list1, PatternTools.patternSearchBM(s1, s1));
+        Assertions.assertEquals(list1, KnuthMorrisPratt.patternSearch(s1, s1));
 
         //empty pattern
-        Assertions.assertThrows(IllegalArgumentException.class, () -> PatternTools.patternSearchBM(s1, emptyString));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> KnuthMorrisPratt.patternSearch(s1, emptyString));
         //empty text
-        Assertions.assertThrows(IllegalArgumentException.class, () -> PatternTools.patternSearchBM(emptyString, s1));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> KnuthMorrisPratt.patternSearch(emptyString, s1));
         //empty pattern and text
-        Assertions.assertThrows(IllegalArgumentException.class, () -> PatternTools.patternSearchBM(emptyString, emptyString));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> KnuthMorrisPratt.patternSearch(emptyString, emptyString));
 
         //pattern longer than text
-        Assertions.assertThrows(IllegalArgumentException.class, () -> PatternTools.patternSearchBM("text", "Longer Pattern"));
+        Assertions.assertThrows(IllegalArgumentException.class, () -> KnuthMorrisPratt.patternSearch("text", "Longer Pattern"));
     }
     @Test
     public void patternSearchBMTimeTest(){
@@ -48,13 +50,13 @@ public class PatternToolsTestBM {
             for(int j = 0; j < patternTests; j++) {
                 shortPattern = PatternTools.generateRandomString(4);
                 startTime = System.nanoTime();
-                PatternTools.patternSearchBM(text,shortPattern);
+                KnuthMorrisPratt.patternSearch(text,shortPattern);
                 endTime = System.nanoTime();
                 result = endTime - startTime;
                 list.add(result);
             }
         }
-        System.out.println("Short pattern Bayer-Moore search algorithm");
+        System.out.println("Short pattern Knuth-Morris-Pratt search algorithm");
         //    System.out.println(list);
         OptionalDouble avg = list.stream().mapToDouble(a -> a).average();
         System.out.println("Average of short pattern: " + (avg.isPresent() ? avg.getAsDouble() : 0));
@@ -66,15 +68,16 @@ public class PatternToolsTestBM {
             for(int j = 0; j < patternTests; j++) {
                 longPattern = PatternTools.generateRandomString(100);
                 startTime = System.nanoTime();
-                PatternTools.patternSearchBM(text,longPattern);
+                KnuthMorrisPratt.patternSearch(text,longPattern);
                 endTime = System.nanoTime();
                 result = endTime - startTime;
                 list.add(result);
             }
         }
-        System.out.println("Long pattern Bayer-Moore search algorithm");
+        System.out.println("Long pattern Knuth-Morris-Pratt search algorithm");
         //    System.out.println(list);
         avg = list.stream().mapToDouble(a -> a).average();
         System.out.println("Average of long pattern: " + (avg.isPresent() ? avg.getAsDouble() : 0));
     }
+
 }
