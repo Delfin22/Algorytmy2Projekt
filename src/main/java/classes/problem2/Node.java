@@ -1,44 +1,62 @@
 package classes.problem2;
 
 public class Node {
-    private boolean value;  //interface uses integers
-    private Node left;
-    private Node right;
+    private int freq;
+    private  char letter;
+    private Node leftChild;
+    private Node rightChild;
 
     public Node() {
+        leftChild = null;
+        rightChild = null;
     }
 
-    public Node(int value) throws IllegalArgumentException{
-        if(value < 0 || value > 1){
-            throw new IllegalArgumentException();
+    public Node(int freq, char letter) {
+        this.freq = freq;
+        this.letter = letter;
+        leftChild = null;
+        rightChild = null;
+    }
+
+    public int getFreq() {
+        return freq;
+    }
+
+    public void setFreq(int freq) {
+        this.freq = freq;
+    }
+
+    public char getLetter() {
+        return letter;
+    }
+
+    public void setLetter(char letter) {
+        this.letter = letter;
+    }
+
+    public Node getLeftChild() {
+        return leftChild;
+    }
+
+    public void setLeftChild(Node leftChild) {
+        this.leftChild = leftChild;
+    }
+
+    public Node getRightChild() {
+        return rightChild;
+    }
+
+    public void setRightChild(Node rightChild) {
+        this.rightChild = rightChild;
+    }
+
+    public void print(String num){
+        if(this.leftChild == null && this.rightChild == null && Character.isLetter(this.letter)){
+            System.out.println(this.letter + " " + this.freq + " " + num);
+            return;
         }
-        this.value = (value != 0);
-        right = null;
-        left = null;
+        this.leftChild.print(num + "0");
+        this.rightChild.print(num + "1");
     }
 
-
-    public int getValue() {
-        return value ? 1 : 0;
-    }
-
-    public void setValue(int value) {
-        this.value = (value != 0);
-    }
-
-    public Node getLeft() {
-        return left;
-    }
-
-    public void setLeft(Node left) {
-        this.left = left;
-    }
-
-    public Node getRight() {
-        return right;
-    }
-
-    public void setRight(Node right) {
-        this.right = right;
-    }
 }

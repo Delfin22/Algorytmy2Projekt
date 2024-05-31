@@ -1,5 +1,7 @@
 package classes.problem2.patternSearchAlgorithms;
 
+import classes.problem2.PatternTools;
+
 import java.util.ArrayList;
 import java.util.List;
 public class RabinKarp {

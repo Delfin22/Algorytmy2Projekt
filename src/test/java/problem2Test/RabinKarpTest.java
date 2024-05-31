@@ -1,4 +1,6 @@
-import classes.problem2.patternSearchAlgorithms.PatternTools;
+package problem2Test;
+
+import classes.problem2.PatternTools;
 import classes.problem2.patternSearchAlgorithms.RabinKarp;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;

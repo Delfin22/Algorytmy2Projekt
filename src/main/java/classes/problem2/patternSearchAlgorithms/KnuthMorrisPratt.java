@@ -71,6 +71,4 @@ public class KnuthMorrisPratt {
         }
         return indexes;
     }
-
-
 }

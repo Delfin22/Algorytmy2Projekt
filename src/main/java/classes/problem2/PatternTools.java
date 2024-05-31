@@ -1,4 +1,6 @@
-package classes.problem2.patternSearchAlgorithms;
+package classes.problem2;
+
+import classes.problem2.patternSearchAlgorithms.BoyerMoore;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -7,7 +9,7 @@ import java.util.Random;
 import static java.lang.Math.max;
 
 public class PatternTools {
-    private static final int lettersInAlphabet = 26; //using small letters in latin alphabet + space
+    private static final int lettersInAlphabet = 26; //using small letters in latin alphabet
     private static final char firstLetter = 'a'; //for shifting unused chars and reducing memory usage
 
     public static String generateRandomString(int length){
@@ -24,7 +26,7 @@ public class PatternTools {
         {
             throw new IllegalArgumentException();
         }
-        List<Integer> indexes = RabinKarp.patternSearch(text,wrongPattern); //temporary (need to add function to decide which algorithm is optimal)
+        List<Integer> indexes = BoyerMoore.patternSearch(text,wrongPattern); //optimal
         List<Integer> differentLettersInPattern = new ArrayList<>();
 
         /*this single loop saves time in case of long patterns
@@ -47,6 +49,7 @@ public class PatternTools {
         return new String(textArr);
     }
 
+    //getters
     public static int getLettersInAlphabet(){
         return lettersInAlphabet;
     }

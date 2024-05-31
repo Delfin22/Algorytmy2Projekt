@@ -1,21 +1,13 @@
 package org.algorithmProject;
-import classes.problem1.Point;
-import classes.problem1.PointGenerator;
-import classes.problem1.PointsTools;
-import classes.problem2.patternSearchAlgorithms.RabinKarp;
-import swing.components.FrameComponent;
-
-import java.util.List;
+import classes.problem2.Huffman;
+import classes.problem2.Node;
 
 public class Main {
     public static void main(String[] args) {
-        List<Point> list = PointGenerator.createWorld(20,1920,1080);
-        FrameComponent.printFrame(list);
-        for(Point p : list){
-            System.out.println(p);
-        }
-        PointsTools.findConvexHull(list);
+        Node node = Huffman.createTree("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbbbbbbbbbbccccccccccccddddddddddddddddfffffeeeeeeeee");
+        node.print("");
+        System.out.println();
+        Huffman.createHashMap(node);
 
-        System.out.println(RabinKarp.patternSearch("ABABDABACDABABCABAB","ABABCABAB"));
     }
 }
