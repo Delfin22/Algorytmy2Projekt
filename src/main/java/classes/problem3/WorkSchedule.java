@@ -15,6 +15,25 @@ public class WorkSchedule {
     final WorkDay[] schedule;
 
 
+    public WorkSchedule(List<Flatguy> residents, List<Point> pointsWall) {
+        // wall = addLightsToWall(pointsWall);
+        wall = getWall();
+        // filter only that flatguy's that fulfill requirements
+        workers = residents.stream()
+                .filter(r -> r.getEnergy() >= REQUIRED_ENERGY)
+                .sorted((r1, r2) -> Integer.compare(r2.getEnergy(), r1.getEnergy()))
+                .limit(WEEK)
+                .toList();
+
+        schedule = new WorkDay[WEEK];
+        for (int i = 0; i < schedule.length; ++i) {
+            Flatguy worker = workers.get(i);
+            worker.prepareOptimalPath(wall);
+
+            schedule[i] = new WorkDay(worker, i);
+        }
+    }
+
     public static void main(String[] args) {
         // we already have wall -> list of points
         List<Point> points_wall = new ArrayList<>();
@@ -25,9 +44,19 @@ public class WorkSchedule {
         schedule.run();
     }
 
-    public WorkSchedule(List<Flatguy> residents, List<Point> pointsWall) {
-        // wall = addLightsToWall(pointsWall);
-        wall = new ArrayList<>();
+    public static List<Flatguy> generateLivingFlatguys() {
+        List<Flatguy> residents = new ArrayList<>();
+        for (int i = 0; i < FLATGUYS_NUMBER; ++i) {
+            int energy = rand.nextInt(Flatguy.MIN_ENERGY, Flatguy.MAX_ENERGY);
+            residents.add(new Flatguy(energy));
+
+        }
+
+        return residents;
+    }
+
+    private List<Landmark> getWall() {
+        final List<Landmark> wall = new ArrayList<>();
         wall.add(new Landmark(new Point(300, 100), 5));
         wall.add(new Landmark(new Point(400, 100), 8));
         wall.add(new Landmark(new Point(500, 100), 1));
@@ -44,20 +73,8 @@ public class WorkSchedule {
         wall.add(new Landmark(new Point(100, 400), 4));
         wall.add(new Landmark(new Point(100, 300), 7));
         wall.add(new Landmark(new Point(200, 200), 8));
-        // filter only that flatguy's that fulfill requirements
-        workers = residents.stream()
-                .filter(r -> r.getEnergy() >= REQUIRED_ENERGY)
-                .sorted((r1, r2) -> Integer.compare(r2.getEnergy(), r1.getEnergy()))
-                .limit(WEEK)
-                .toList();
 
-        schedule = new WorkDay[WEEK];
-        for (int i = 0; i < schedule.length; ++i) {
-            Flatguy worker = workers.get(i);
-            worker.prepareOptimalPath(wall);
-
-            schedule[i] = new WorkDay(worker, i);
-        }
+        return wall;
     }
 
     private List<Landmark> addLightsToWall(List<Point> points_wall) {
@@ -78,16 +95,5 @@ public class WorkSchedule {
             w.printPath();
             w.sendToRest();
         }
-    }
-
-    public static List<Flatguy> generateLivingFlatguys() {
-        List<Flatguy> residents = new ArrayList<>();
-        for (int i = 0; i < FLATGUYS_NUMBER; ++i) {
-            int energy = rand.nextInt(Flatguy.MIN_ENERGY, Flatguy.MAX_ENERGY);
-            residents.add(new Flatguy(energy));
-
-        }
-
-        return residents;
     }
 }

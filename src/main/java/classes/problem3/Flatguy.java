@@ -8,12 +8,11 @@ import java.util.List;
 public class Flatguy {
     static final int MAX_ENERGY = 10;
     static final int MIN_ENERGY = 1;
+    private final int energy;
     int current;
-
     private List<Landmark> wall;
-    private int energy;
     private int restDaysLeft = 0;
-    private ArrayList<Integer> stopPoints;
+    private ArrayList<Integer> indexesOfStops;
 
     /*
      * PROBLEM:  **********************************************************************************
@@ -68,20 +67,23 @@ public class Flatguy {
         // trzeba też wybrać takie punkty zatrzymania się, by liczba odsłuchań melodii przez strażnika była jak najmniejsza
     }
 
-    public void prepareOptimalPath(List<Landmark> wall) {
-        this.wall = wall;
+    public void prepareOptimalPath(List<Landmark> w) {
+        this.wall = w;
 
-        this.stopPoints = new ArrayList<>();
+        this.indexesOfStops = new ArrayList<>();
         Landmark startPoint = Collections.max(wall, (p1, p2) -> Integer.compare(p1.getBrightness(), p2.getBrightness()));
-        stopPoints.add(wall.indexOf(startPoint));
+        indexesOfStops.add(wall.indexOf(startPoint));
 
-        int lastStopBrightness = wall.get(stopPoints.getLast()).getBrightness();
-        int nextDarkerIndex = getNextDarkerLandmarkIndex(stopPoints.getLast(), energy, lastStopBrightness);
+        int lastStopBrightness = wall.get(indexesOfStops.getLast()).getBrightness();
+        int nextDarkerIndex = getNextDarkerLandmarkIndex(indexesOfStops.getLast(), energy, lastStopBrightness);
         while (nextDarkerIndex != -1) {
-            stopPoints.add(nextDarkerIndex);
+            indexesOfStops.add(nextDarkerIndex);
+            if (indexesOfStops.getFirst().equals(indexesOfStops.getLast())) {
+                break;
+            }
 
-            lastStopBrightness = wall.get(stopPoints.getLast()).getBrightness();
-            nextDarkerIndex = getNextDarkerLandmarkIndex(stopPoints.getLast(), energy, lastStopBrightness);
+            lastStopBrightness = wall.get(indexesOfStops.getLast()).getBrightness();
+            nextDarkerIndex = getNextDarkerLandmarkIndex(indexesOfStops.getLast(), energy, lastStopBrightness);
         }
 
 
@@ -90,26 +92,27 @@ public class Flatguy {
     }
 
     private int getNextDarkerLandmarkIndex(int posIndex, int energy, int lastStopBrightness) {
-        int curr = posIndex + 1;
+        int curr = posIndex;
         int darkerThanPrevIndex = -1;
         for (int i = 0; i < energy; ++i) {
+            ++curr;
+
+            if (curr == indexesOfStops.getFirst()) {
+                return indexesOfStops.getFirst();  // to be checked by caller
+            }
+
             if (curr >= wall.size()) {
                 curr = 0;
-            } else if (curr == stopPoints.getFirst()) {
-                return -1;
             }
 
             if (wall.get(curr).getBrightness() <= lastStopBrightness) {
-                if (darkerThanPrevIndex == -1) {  // first darker one
+                if (darkerThanPrevIndex == -1) {  // first time darker point
                     darkerThanPrevIndex = curr;
-                } else if (wall.get(darkerThanPrevIndex).getBrightness() < wall.get(curr).getBrightness()) {
-                    // else find brightest but darker than last stop
+                } else if (wall.get(darkerThanPrevIndex).getBrightness() <= wall.get(curr).getBrightness()) {  // another darker point
+                    // find brightest but darker than last stop
                     darkerThanPrevIndex = curr;
                 }
             }
-
-
-            ++curr;
         }
 
         // if darkerThanPrevIndex == -1 then flatguy just moves to furthest point away and get rest
@@ -117,7 +120,7 @@ public class Flatguy {
     }
 
     public void printPath() {
-        for (int i : stopPoints) {
+        for (int i : indexesOfStops) {
             System.out.printf("%d - %s, \t", i, wall.get(i).toString());
         }
         System.out.println();
