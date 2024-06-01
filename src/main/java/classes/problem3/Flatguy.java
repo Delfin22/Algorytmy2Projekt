@@ -36,6 +36,4 @@ public class Flatguy {
     public void setRestDaysLeft(int restDaysLeft) {
         this.restDaysLeft = restDaysLeft;
     }
-
-
 }

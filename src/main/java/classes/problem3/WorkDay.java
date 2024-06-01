@@ -4,21 +4,19 @@ import java.util.List;
 
 public class WorkDay {
     Flatguy guard;  // currently guarding
-    int daynumber;
+    int day;
+    List<StopPoint> stops;
 
-    List<StopPoint> indexesOfStops;
-
-    public WorkDay(Flatguy guard, int daynumber, List<StopPoint> path) {
+    public WorkDay(Flatguy guard, int day, List<StopPoint> path) {
         this.guard = guard;
-        this.daynumber = daynumber;
-        this.indexesOfStops = path;
+        this.day = day;
+        this.stops = path;
     }
 
+
     public void printPath() {
-        for (StopPoint stop : indexesOfStops) {
-            System.out.printf("%s %s\n",
-                    stop.landmark(),
-                    stop.restRequired() ? "(Rest required)" : "");
+        for (StopPoint stop : stops) {
+            System.out.printf("\t%s %s\n", stop.landmark(), stop.restRequired() ? "(Rest required)" : "");
         }
         System.out.println();
     }
