@@ -12,7 +12,7 @@ public class Flatguy {
     int current;
     private List<Landmark> wall;
     private int restDaysLeft = 0;
-    private ArrayList<Integer> indexesOfStops;
+    private ArrayList<StopPoint> indexesOfStops;
 
     /*
      * PROBLEM:  **********************************************************************************
@@ -72,18 +72,21 @@ public class Flatguy {
 
         this.indexesOfStops = new ArrayList<>();
         Landmark startPoint = Collections.max(wall, (p1, p2) -> Integer.compare(p1.getBrightness(), p2.getBrightness()));
-        indexesOfStops.add(wall.indexOf(startPoint));
+        indexesOfStops.add(new StopPoint(wall.indexOf(startPoint), false));
 
-        int lastStopBrightness = wall.get(indexesOfStops.getLast()).getBrightness();
-        int nextDarkerIndex = getNextDarkerLandmarkIndex(indexesOfStops.getLast(), energy, lastStopBrightness);
-        while (nextDarkerIndex != -1) {
-            indexesOfStops.add(nextDarkerIndex);
-            if (indexesOfStops.getFirst().equals(indexesOfStops.getLast())) {
+        int lastStopBrightness = wall.get(indexesOfStops.getLast().index()).getBrightness();
+        int nextIndex = getNextDarkerLandmarkIndex(indexesOfStops.getLast().index(), energy, lastStopBrightness);
+        while (nextIndex != -1) {
+            boolean restRequired = wall.get(indexesOfStops.getLast().index()).getBrightness() < wall.get(nextIndex).getBrightness();
+            indexesOfStops.add(new StopPoint(nextIndex, restRequired));
+
+            boolean returnToStart = indexesOfStops.getFirst().index() == indexesOfStops.getLast().index();
+            if (returnToStart) {
                 break;
             }
 
-            lastStopBrightness = wall.get(indexesOfStops.getLast()).getBrightness();
-            nextDarkerIndex = getNextDarkerLandmarkIndex(indexesOfStops.getLast(), energy, lastStopBrightness);
+            lastStopBrightness = wall.get(indexesOfStops.getLast().index()).getBrightness();
+            nextIndex = getNextDarkerLandmarkIndex(indexesOfStops.getLast().index(), energy, lastStopBrightness);
         }
 
 
@@ -97,8 +100,8 @@ public class Flatguy {
         for (int i = 0; i < energy; ++i) {
             ++curr;
 
-            if (curr == indexesOfStops.getFirst()) {
-                return indexesOfStops.getFirst();  // to be checked by caller
+            if (curr == indexesOfStops.getFirst().index()) {
+                return indexesOfStops.getFirst().index();  // to be checked by caller
             }
 
             if (curr >= wall.size()) {
@@ -120,8 +123,11 @@ public class Flatguy {
     }
 
     public void printPath() {
-        for (int i : indexesOfStops) {
-            System.out.printf("%d - %s, \t", i, wall.get(i).toString());
+        for (StopPoint stop : indexesOfStops) {
+            System.out.printf("%d %s - %s, \t",
+                    stop.index(),
+                    stop.restRequired() ? "(REST required)" : "",
+                    wall.get(stop.index()).toString());
         }
         System.out.println();
     }
