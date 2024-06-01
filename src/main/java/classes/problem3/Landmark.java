@@ -12,7 +12,7 @@ public class Landmark {
 
     @Override
     public String toString() {
-        return String.format("(%.0f, %.0f | %d)", pos.getX(), pos.getY(), getBrightness());
+        return String.format("(%.0f, %.0f | %d brightness)", pos.getX(), pos.getY(), getBrightness());
     }
 
     public int getBrightness() {
