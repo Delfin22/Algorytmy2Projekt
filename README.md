@@ -21,7 +21,9 @@ płaszczaki rozpoznają litery. Ze Strony płynie piękna opowieść-melodia, kt
 w dobry nastrój. Pewnego razu ze strony zamiast „boli” popłynęło „poli”. Jest to fragment melodii,
 który wywołuje strach. Nikt nie chce tego słuchać. Nie było tego wcześniej na Stronie.
 Zapanował popłoch. Uznano, że jacyś intruzi spoza Krainy musieli zamienić w słowie „boli” literę b
-na p. Aby chronić piękną opowieść-melodię zapisaną na Stronie, postanowiono zbudować płot naokoło
+na p. 
+![Tragarze](images/robotnicy.png)
+Aby chronić piękną opowieść-melodię zapisaną na Stronie, postanowiono zbudować płot naokoło
 Krainy, wykorzystując punkty orientacyjne. Płot zbuduje się z odcinków długości 1 (można je ciąć).
 Odcinki będą nosić tragarze. Wśród płaszczaków żyją dwa rodzaje tragarzy: ci z rękoma z tyłu i ci z
 rękoma z przodu. W świecie dwuwymiarowym niemożliwe jest przełożenie rąk (z przodu do tyłu oraz
@@ -48,7 +50,9 @@ Mamy inwazję istot z trzeciego wymiaru, które złośliwie przestawiają litery
 na Stronie. Jedyne co można zrobić, według Heretyka, to zachować piękną
 opowieść-melodię dla potomności. Heretyk poszedł więc do Informatyka,
 który dysponuje prymitywną maszyną, na której można zapisać tylko 0
-oraz 1. Informatyk próbował już wcześniej do tej maszyny wpisać piękną
+oraz 1. 
+![Informatyk](images/informatyk.png)
+Informatyk próbował już wcześniej do tej maszyny wpisać piękną
 opowieść-melodię zapisaną na Stronie. Zastosował on kodowanie, w którym każdej literze odpowiada unikalny ciąg 0-1 długości 5, np. a – 00000,
 b - 00001 itd. W maszynie nie ma jednak wystarczająco dużo miejsca,
 żeby zapisać całą opowieść-melodię. Informatyk twierdzi, że tego miejsca
