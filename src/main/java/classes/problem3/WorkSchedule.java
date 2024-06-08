@@ -4,6 +4,15 @@ import classes.problem1.Point;
 
 import java.util.*;
 
+/*
+ * PROBLEM:  **********************************************************************************
+ *  Ustalić jak najszybciej grafik pracy strażników i jak najmniejszą liczbę odsłuchań melodii dla każdego strażnika
+ **********************************************************************************************
+ */
+
+/**
+ * Represents work schedule for next week
+ */
 public class WorkSchedule {
     // TODO: it's important to pick correct starting point
 
@@ -38,6 +47,10 @@ public class WorkSchedule {
     final WorkDay[] schedule;
 
 
+    /**
+     * @param residents inhabitants of flatland
+     * @param pointsWall point of build wall that will be guarded
+     */
     public WorkSchedule(List<Flatguy> residents, List<Point> pointsWall) {
         // wall = addLightsToWall(pointsWall);
         wall = getWall();
@@ -67,6 +80,10 @@ public class WorkSchedule {
         schedule.run();
     }
 
+    /**
+     * Helper function for creating list of inhabitants in flatland
+     * @return returns list of all flatguys in land.
+     */
     public static List<Flatguy> generateLivingFlatguys() {
         List<Flatguy> residents = new ArrayList<>();
         for (int i = 0; i < FLATGUYS_NUMBER; ++i) {
@@ -109,6 +126,12 @@ public class WorkSchedule {
         return wall;
     }
 
+    /**
+     * Prepares optimal path for guard based on his energy
+     * optimal means that it will require least stops
+     * @param guard guard for whom path is gonna be created
+     * @return path with least stops for rest
+     */
     public List<StopPoint> prepareOptimalPath(Flatguy guard) {
         List<StopPoint> path = new ArrayList<>();
 
@@ -134,6 +157,12 @@ public class WorkSchedule {
     }
 
 
+    /**
+     * Helper function that finds the brightest landmark but darker than current one in energy distance forward
+     * @param path current build path
+     * @param energy distance in which we are looking for the brightest landmark
+     * @return the brightest landmark with brightness level below last one visited landmark
+     */
     private Landmark getNextDarkerLandmark(List<StopPoint> path, int energy) {
         final Landmark lastStop = path.getLast().landmark();
 
