@@ -14,8 +14,6 @@ import java.util.*;
  * Represents work schedule for next week
  */
 public class WorkSchedule {
-    // TODO: it's important to pick correct starting point
-
     // travel n points, and then check if its brighter than the last one
     //if (wall.get(previous).getBrightness() > wall.get(current).getBrightness()) {
     // zachowuje cala energie
@@ -37,108 +35,54 @@ public class WorkSchedule {
      */
     // trzeba też wybrać takie punkty zatrzymania się, by liczba odsłuchań melodii przez strażnika była jak najmniejsza
 
+    public static final int REQUIRED_ENERGY = 1;  // by default allow all to work
+    public static final int WEEK = 7;
     static final Random rand = new Random();
     static final int FLATGUYS_NUMBER = 10;
-    static final int REQUIRED_ENERGY = 1;  // by default allow all to work
-    static final int WEEK = 7;
-    final List<Flatguy> workers;
     final List<Landmark> wall;
-
     final WorkDay[] schedule;
-
+    Workers workers;
 
     /**
-     * @param residents inhabitants of flatland
-     * @param pointsWall point of build wall that will be guarded
+     * @param residents  inhabitants of flatland
+     * @param stopPoints landmarks of build wall that will be guarded
+     * @param ndays      number of schedule days
      */
-    public WorkSchedule(List<Flatguy> residents, List<Point> pointsWall) {
-        // wall = addLightsToWall(pointsWall);
-        wall = getWall();
-        // filter only that flatguy's that fulfill requirements
-        workers = residents.stream()
-                .filter(r -> r.getEnergy() >= REQUIRED_ENERGY)
-                .sorted((r1, r2) -> Integer.compare(r2.getEnergy(), r1.getEnergy()))
-                .limit(WEEK)
-                .toList();
+    public WorkSchedule(List<Flatguy> residents, List<Landmark> stopPoints, int ndays) {
+        wall = stopPoints;
+        workers = new Workers(residents, WorkSchedule.REQUIRED_ENERGY);
 
-        schedule = new WorkDay[WEEK];
-        for (int i = 0; i < schedule.length; ++i) {
-            Flatguy worker = workers.get(i);
-            List<StopPoint> path = prepareOptimalPath(worker);
-
-            schedule[i] = new WorkDay(worker, i, path);
-        }
-    }
-
-    public static void main(String[] args) {
-        // we already have wall -> list of points
-        List<Point> points_wall = new ArrayList<>();
-        List<Flatguy> residents = generateLivingFlatguys();
-
-        WorkSchedule schedule = new WorkSchedule(residents, points_wall);
-
-        schedule.run();
+        schedule = prepareSchedule(ndays);
     }
 
     /**
      * Helper function for creating list of inhabitants in flatland
+     *
      * @return returns list of all flatguys in land.
      */
     public static List<Flatguy> generateLivingFlatguys() {
         List<Flatguy> residents = new ArrayList<>();
         for (int i = 0; i < FLATGUYS_NUMBER; ++i) {
             int energy = rand.nextInt(Flatguy.MIN_ENERGY, Flatguy.MAX_ENERGY);
-            residents.add(new Flatguy(energy));
+            residents.add(new Flatguy(i, energy));
 
         }
 
         return residents;
     }
 
-    private List<Landmark> getWall() {
-        final List<Landmark> wall = new ArrayList<>();
-        wall.add(new Landmark(new Point(300, 100), 5));
-        wall.add(new Landmark(new Point(400, 100), 8));
-        wall.add(new Landmark(new Point(500, 100), 1));
-        wall.add(new Landmark(new Point(600, 200), 2));
-        wall.add(new Landmark(new Point(700, 300), 4));
-        wall.add(new Landmark(new Point(700, 400), 9));
-        wall.add(new Landmark(new Point(700, 500), 10));
-        wall.add(new Landmark(new Point(600, 600), 2));
-        wall.add(new Landmark(new Point(500, 700), 6));
-        wall.add(new Landmark(new Point(400, 700), 8));
-        wall.add(new Landmark(new Point(300, 700), 9));  // 10 index for 9 brightness
-        wall.add(new Landmark(new Point(200, 600), 3));
-        wall.add(new Landmark(new Point(100, 500), 3));
-        wall.add(new Landmark(new Point(100, 400), 4));
-        wall.add(new Landmark(new Point(100, 300), 7));
-        wall.add(new Landmark(new Point(200, 200), 8));
-
-        return wall;
-    }
-
-    private List<Landmark> addLightsToWall(List<Point> points_wall) {
-        final List<Landmark> wall = new ArrayList<>();
-        for (Point p : points_wall) {
-            int brightness = rand.nextInt(1, 10);
-            wall.add(new Landmark(p, brightness));
-        }
-        return wall;
-    }
-
     /**
-     * Prepares optimal path for guard based on his energy
-     * optimal means that it will require least stops
+     * @param wall  current wall around string
      * @param guard guard for whom path is gonna be created
      * @return path with least stops for rest
      */
-    public List<StopPoint> prepareOptimalPath(Flatguy guard) {
+    static public List<StopPoint> prepareOptimalPath(List<Landmark> wall, Flatguy guard) {
         List<StopPoint> path = new ArrayList<>();
 
         Landmark startPoint = Collections.max(wall, (p1, p2) -> Integer.compare(p1.getBrightness(), p2.getBrightness()));
         path.add(new StopPoint(startPoint, false));
 
-        Landmark next = getNextDarkerLandmark(path, guard.getEnergy());
+        Landmark next = getNextDarkerLandmark(wall, path, guard.getEnergy());
         while (next != null) {
             boolean restRequired = path.getLast().landmark().getBrightness() < next.getBrightness();
             path.add(new StopPoint(next, restRequired));
@@ -148,22 +92,21 @@ public class WorkSchedule {
                 break;
             }
 
-            next = getNextDarkerLandmark(path, guard.getEnergy());
+            next = getNextDarkerLandmark(wall, path, guard.getEnergy());
         }
 
         return path;
-        // TODO: returns optimal starting point and prepares path
-        // TODO: find optimal starting point based on energy of worker
     }
-
 
     /**
      * Helper function that finds the brightest landmark but darker than current one in energy distance forward
-     * @param path current build path
+     *
+     * @param wall   current wall around string
+     * @param path   current build path
      * @param energy distance in which we are looking for the brightest landmark
      * @return the brightest landmark with brightness level below last one visited landmark
      */
-    private Landmark getNextDarkerLandmark(List<StopPoint> path, int energy) {
+    static private Landmark getNextDarkerLandmark(List<Landmark> wall, List<StopPoint> path, int energy) {
         final Landmark lastStop = path.getLast().landmark();
 
         Landmark darkest = null;
@@ -193,15 +136,40 @@ public class WorkSchedule {
         }
 
         // if darkerThanPrevIndex == -1 then flatguy just moves to furthest point away and get rest
-        return darkest  == null ? current : darkest;
+        return darkest == null ? current : darkest;
     }
 
-    private void run() {
-        for (WorkDay day : schedule) {
-            System.out.printf("Flatguy %d energi\n", day.guard.getEnergy());
-            day.printPath();
+    public Workers getWorkers() {
+        return workers;
+    }
 
-            day.guard.sendToRest();
+    /**
+     * @return returns prepares schedule
+     */
+    public WorkDay[] getSchedule() {
+        return schedule;
+    }
+
+    /**
+     * prepares schedule for next n days
+     * @param ndays for how many days
+     * @return returns prepared schedule
+     */
+    public WorkDay[] prepareSchedule(int ndays) {
+        final WorkDay[] schedule = new WorkDay[ndays];
+        for (int i = 0; i < ndays; ++i) {
+            Flatguy worker = workers.get();
+            if (worker == null) {
+                schedule[i] = new WorkDay(null, i, null);
+                workers.sendCurrToRest();
+                continue;
+            }
+
+            List<StopPoint> path = prepareOptimalPath(wall, worker);
+            schedule[i] = new WorkDay(worker, i, path);
+            workers.sendCurrToRest();
         }
+
+        return schedule;
     }
 }

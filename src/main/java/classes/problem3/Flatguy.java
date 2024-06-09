@@ -7,20 +7,34 @@ import java.util.List;
 // TODO: better name (maybe Flathead?)
 
 /**
- * Represents entity in Flat world
+ * Represents character in Flat world
  */
 public class Flatguy {
     static final int MAX_ENERGY = 10;
     static final int MIN_ENERGY = 1;
-
     private final int energy;
+    private final int number;
     private int restDaysLeft = 0;
 
     /**
+     * @param number unique number for that character
      * @param energy specifies how much energy this character have
      */
-    public Flatguy(int energy) {
+    public Flatguy(int number, int energy) {
         this.energy = energy;
+        this.number = number;
+    }
+
+    @Override
+    public String toString() {
+        return String.format("Flatguy{%d %d energy}", number, energy);
+    }
+
+    /**
+     * @return returns unique number for that flatguy
+     */
+    public int getNumber() {
+        return number;
     }
 
     /**
@@ -32,10 +46,24 @@ public class Flatguy {
 
 
     /**
+     * @return returns how many days of rest this flatguy have
+     */
+    public int getRestDaysLeft() {
+        return restDaysLeft;
+    }
+
+    /**
+     * @param restDaysLeft specifies how many rest days character have left
+     */
+    public void setRestDaysLeft(int restDaysLeft) {
+        this.restDaysLeft = restDaysLeft;
+    }
+
+    /**
      * @return if current character is resting
      */
     public boolean isResting() {
-        return restDaysLeft != 0;
+        return getRestDaysLeft() != 0;
     }
 
     /**
@@ -46,9 +74,12 @@ public class Flatguy {
     }
 
     /**
-     * @param restDaysLeft specifies how many rest days character have left
+     * Decreases number of rest days for that flatguy
+     * if rest days is 0 then do nothing
      */
-    public void setRestDaysLeft(int restDaysLeft) {
-        this.restDaysLeft = restDaysLeft;
+    public void decrementRestDays() {
+        if (restDaysLeft > 0) {
+            --restDaysLeft;
+        }
     }
 }

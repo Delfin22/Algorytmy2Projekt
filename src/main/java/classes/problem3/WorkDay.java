@@ -12,14 +12,37 @@ public class WorkDay {
      * Patrolling guard in current day
      */
     Flatguy guard;
+
+    /**
+     * @return returns index number of that day
+     */
+    public int getDay() {
+        return day;
+    }
+
     /**
      * which day it is
      */
     int day;
+
+    /**
+     * @return returns list of stops for current guard
+     */
+    public List<StopPoint> getSchedule() {
+        return stops;
+    }
+
     /**
      * plan of stops for current guard based on his energy
      */
     List<StopPoint> stops;
+
+    /**
+     * @return returns guard currently guarding the wall in that Workday
+     */
+    public Flatguy getGuard() {
+        return guard;
+    }
 
     /**
      * Creates work day
@@ -31,16 +54,5 @@ public class WorkDay {
         this.guard = guard;
         this.day = day;
         this.stops = path;
-    }
-
-
-    /**
-     * Help function that
-     */
-    public void printPath() {
-        for (StopPoint stop : stops) {
-            System.out.printf("\t%s %s\n", stop.landmark(), stop.restRequired() ? "(Rest required)" : "");
-        }
-        System.out.println();
     }
 }
