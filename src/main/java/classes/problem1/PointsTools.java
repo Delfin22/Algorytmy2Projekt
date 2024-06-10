@@ -39,7 +39,6 @@ public class PointsTools {
     }
 
     public static List<Point> findConvexHull(List<Point> list){
-        List<Point> returnList = new ArrayList<>();
 
         Point minPoint = new Point();
 
@@ -96,6 +95,9 @@ public class PointsTools {
         for(Point p : stack){
             System.out.println("Otoczka" + p);
         }
+
+        list = new ArrayList<>(stack);
+
         return list;
     }
 
