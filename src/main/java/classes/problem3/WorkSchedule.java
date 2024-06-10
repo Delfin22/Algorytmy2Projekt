@@ -38,7 +38,6 @@ public class WorkSchedule {
     public static final int REQUIRED_ENERGY = 1;  // by default allow all to work
     public static final int WEEK = 7;
     static final Random rand = new Random();
-    static final int FLATGUYS_NUMBER = 10;
     final List<Landmark> wall;
     final WorkDay[] schedule;
     Workers workers;
@@ -53,22 +52,6 @@ public class WorkSchedule {
         workers = new Workers(residents, WorkSchedule.REQUIRED_ENERGY);
 
         schedule = prepareSchedule(ndays);
-    }
-
-    /**
-     * Helper function for creating list of inhabitants in flatland
-     *
-     * @return returns list of all flatguys in land.
-     */
-    public static List<Flatguy> generateLivingFlatguys() {
-        List<Flatguy> residents = new ArrayList<>();
-        for (int i = 0; i < FLATGUYS_NUMBER; ++i) {
-            int energy = rand.nextInt(Flatguy.MIN_ENERGY, Flatguy.MAX_ENERGY);
-            residents.add(new Flatguy(i, energy));
-
-        }
-
-        return residents;
     }
 
     /**

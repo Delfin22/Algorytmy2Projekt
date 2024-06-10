@@ -3,19 +3,19 @@ package classes.problem1;
 import java.util.*;
 
 public class PointsTools {
-    public static double calculateDet(Point p1, Point p2, Point p3){
+    public static double calculateDet(Point p1, Point p2, Point p3) {
         double result;
 
 //        p1.x p1.y 1
 //        p2.x p2.y 1
 //        p3.x p3.y 1
 
-        result = p1.getX()*p2.getY() +
-                p2.getX()*p3.getY() +
-                p3.getX()*p1.getY() -
-                p2.getY()*p3.getX() -
-                p3.getY()*p1.getX() -
-                p1.getY()*p2.getX();
+        result = p1.getX() * p2.getY() +
+                p2.getX() * p3.getY() +
+                p3.getX() * p1.getY() -
+                p2.getY() * p3.getX() -
+                p3.getY() * p1.getX() -
+                p1.getY() * p2.getX();
 
         return result;
     }
@@ -38,19 +38,19 @@ public class PointsTools {
         }
     }
 
-    public static List<Point> findConvexHull(List<Point> list){
+    public static List<Point> findConvexHull(List<Point> list) {
 
         Point minPoint = new Point();
 
         minPoint.setY(list.getFirst().getY());
 
         //Looking for a point with the lowest Y value
-        for(Point p : list){
-            if(p.getY() < minPoint.getY()){
+        for (Point p : list) {
+            if (p.getY() < minPoint.getY()) {
                 minPoint.setY(p.getY());
                 minPoint.setX(p.getX());
-            }else if(p.getY() == minPoint.getY()) {
-                if(p.getX() < minPoint.getX()){
+            } else if (p.getY() == minPoint.getY()) {
+                if (p.getX() < minPoint.getX()) {
                     minPoint.setY(p.getY());
                     minPoint.setX(p.getX());
                 }
@@ -85,14 +85,14 @@ public class PointsTools {
         stack.push(list.get(1));
         stack.push(list.get(2));
 
-        for(int i = 3; i < list.size(); i++){
-            while(calculateDet(stack.get(stack.size() - 2), stack.peek(), list.get(i)) <= 0){
+        for (int i = 3; i < list.size(); i++) {
+            while (calculateDet(stack.get(stack.size() - 2), stack.peek(), list.get(i)) <= 0) {
                 stack.pop();
             }
             stack.push(list.get(i));
         }
 
-        for(Point p : stack){
+        for (Point p : stack) {
             System.out.println("Otoczka" + p);
         }
 

@@ -1,5 +1,7 @@
 package classes.problem3;
 
+import org.algorithmProject.Main;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -15,6 +17,23 @@ public class Flatguy {
     private final int energy;
     private final int number;
     private int restDaysLeft = 0;
+
+    /**
+     * Helper function for creating list of inhabitants in flatland
+     *
+     * @return returns list of all flatguys in land.
+     */
+    public static List<Flatguy> generateLivingFlatguys(int nflatheads) {
+        List<Flatguy> residents = new ArrayList<>();
+        for (int i = 0; i < nflatheads; ++i) {
+            int energy = Main.rand.nextInt(Flatguy.MIN_ENERGY, Flatguy.MAX_ENERGY);
+            residents.add(new Flatguy(i, energy));
+
+        }
+
+        return residents;
+    }
+
 
     /**
      * @param number unique number for that character

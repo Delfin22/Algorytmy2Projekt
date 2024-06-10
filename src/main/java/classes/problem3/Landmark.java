@@ -12,6 +12,9 @@ public class Landmark {
      * są różnej jasności i zgodnie z ruchem wskazówek zegara wyznaczają trasę strażnika.
      */
 
+    public static int MIN_BRIGHTNESS = 1;
+    public static int MAX_BRIGHTNESS = 10;
+
     /**
      * position of that stop
      */
@@ -26,7 +29,7 @@ public class Landmark {
      */
     @Override
     public String toString() {
-        return String.format("(%.0f, %.0f | %d brightness)", pos.getX(), pos.getY(), getBrightness());
+        return String.format("((%.2f, %.2f) | %d brightness)", pos.getX(), pos.getY(), getBrightness());
     }
 
     /**

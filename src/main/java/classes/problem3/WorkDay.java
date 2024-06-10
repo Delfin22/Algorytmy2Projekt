@@ -5,6 +5,7 @@ import java.util.List;
 /**
  * Represents working day for WorkSchedule
  * Contains information in which day which flatguy will patrol the wall
+ *
  * @see WorkSchedule
  */
 public class WorkDay {
@@ -46,13 +47,22 @@ public class WorkDay {
 
     /**
      * Creates work day
+     *
      * @param guard guard that will patrol the wall
-     * @param day in which day guard is gonna work
-     * @param path list of stops where guard will stop and look around
+     * @param day   in which day guard is gonna work
+     * @param path  list of stops where guard will stop and look around
      */
     public WorkDay(Flatguy guard, int day, List<StopPoint> path) {
         this.guard = guard;
         this.day = day;
         this.stops = path;
+    }
+
+    @Override
+    public String toString() {
+        String workerInformation = (guard != null) ?
+                String.format("Flatguy$%d with %d energy", guard.getNumber(), guard.getEnergy())
+                : "No WORKER AVAILABLE";
+        return String.format("Day %d: %s\t{%s}", day, workerInformation, stops != null ? stops : "");
     }
 }
