@@ -49,14 +49,4 @@ public class Node {
     public void setRightChild(Node rightChild) {
         this.rightChild = rightChild;
     }
-
-    public void print(String num){
-        if(this.leftChild == null && this.rightChild == null && Character.isLetter(this.letter)){
-            System.out.println(this.letter + " " + this.freq + " " + num);
-            return;
-        }
-        this.leftChild.print(num + "0");
-        this.rightChild.print(num + "1");
-    }
-
 }

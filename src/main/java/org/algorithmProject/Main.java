@@ -17,12 +17,6 @@ public class Main {
     public static Random rand = new Random();
 
     public static void main(String[] args) {
-        Node node = Huffman.createTree("aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaabbbbbbbbbbbbbccccccccccccddddddddddddddddfffffeeeeeeeee");
-        node.print("");
-        System.out.println();
-
-        Map<Character, String> letter_codes = Huffman.createHashMap(node);
-        letter_codes.forEach(((character, code) -> System.out.printf("%c %s\n", character, code)));
 
         List<Point> world = PointGenerator.createWorld(50, 800, 600);
         List<Flatguy> flatguys = Flatguy.generateLivingFlatguys(10);

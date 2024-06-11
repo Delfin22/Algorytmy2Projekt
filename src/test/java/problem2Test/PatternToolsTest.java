@@ -12,5 +12,11 @@ public class PatternToolsTest {
         String goodPattern = "boli";
         String expectedOutput = "bolimorfizmobolipbolippoboli";
         Assertions.assertEquals(expectedOutput, PatternTools.changePattern(text,wrongPattern,goodPattern));
+
+        Assertions.assertThrows(IllegalArgumentException.class, ()-> PatternTools.changePattern("",wrongPattern,goodPattern));
+        Assertions.assertThrows(IllegalArgumentException.class, ()-> PatternTools.changePattern(text,"",goodPattern));
+        Assertions.assertThrows(IllegalArgumentException.class, ()-> PatternTools.changePattern(text,wrongPattern,""));
+        Assertions.assertThrows(IllegalArgumentException.class, ()-> PatternTools.changePattern("","",""));
+
     }
 }

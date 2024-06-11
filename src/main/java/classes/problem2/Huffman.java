@@ -3,7 +3,8 @@ package classes.problem2;
 import java.util.*;
 
 public class Huffman {
-    public static Node createTree(String text) {
+    private LinkedHashMap<Character, String> codes = new LinkedHashMap<>();
+    private Node createTree(String text) {
         int n = PatternTools.getLettersInAlphabet();
         int index;
         PriorityQueue<Node> q = new PriorityQueue<>(n, Comparator.comparingInt(Node::getFreq));
@@ -43,9 +44,7 @@ public class Huffman {
         return root;
     }
 
-    public static LinkedHashMap<Character, String> createHashMap(Node root) {
-        LinkedHashMap<Character, String> codes = new LinkedHashMap<>();
-
+    private LinkedHashMap<Character, String> createHashMap(Node root) {
         Stack<Node> stack = new Stack<>();
         Node node = root;
         Stack<StringBuilder> codeStack = new Stack<>();
@@ -61,7 +60,6 @@ public class Huffman {
             currCode = codeStack.pop();
 
             if (node.getLeftChild() == null && node.getRightChild() == null && Character.isLetter(node.getLetter())) {
-                // System.out.println("- " + node.getLetter() + " " + node.getFreq() + " " + currCode);
                 codes.put(node.getLetter(), currCode.toString());
             }
 
@@ -72,8 +70,18 @@ public class Huffman {
         return codes;
     }
 
-    public static String encodeText(String text) {
+    public String encodeText(String text) {
         Node root = createTree(text);
-        return null;
+        HashMap<Character,String> codes = createHashMap(root);
+        StringBuilder returnString = new StringBuilder();
+        for(int i = 0; i < text.length(); i++){
+            returnString.append(codes.get(text.charAt(i)));
+        }
+        return returnString.toString();
     }
+
+    public LinkedHashMap<Character, String> getCodes() {
+        return codes;
+    }
+
 }
