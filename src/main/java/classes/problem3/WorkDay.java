@@ -63,6 +63,6 @@ public class WorkDay {
         String workerInformation = (guard != null) ?
                 String.format("Flatguy$%d with %d energy", guard.getNumber(), guard.getEnergy())
                 : "No WORKER AVAILABLE";
-        return String.format("Day %d: %s\t{%s}", day, workerInformation, stops != null ? stops : "");
+        return String.format("Day %d: %s\n{%s}", day, workerInformation, stops != null ? stops : "");
     }
 }

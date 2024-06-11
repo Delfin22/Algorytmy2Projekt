@@ -26,7 +26,7 @@ public class Flatguy {
     public static List<Flatguy> generateLivingFlatguys(int nflatheads) {
         List<Flatguy> residents = new ArrayList<>();
         for (int i = 0; i < nflatheads; ++i) {
-            int energy = Main.rand.nextInt(Flatguy.MIN_ENERGY, Flatguy.MAX_ENERGY);
+            int energy = Problem3Application.rand.nextInt(Flatguy.MIN_ENERGY, Flatguy.MAX_ENERGY);
             residents.add(new Flatguy(i, energy));
 
         }

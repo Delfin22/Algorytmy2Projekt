@@ -9,6 +9,6 @@ package classes.problem3;
 public record StopPoint(Landmark landmark, boolean restRequired) {
     @Override
     public String toString() {
-        return String.format("{Stop %s %s}", landmark, restRequired ? "Rest required" : "");
+        return String.format("{Stop%s %s}", landmark, restRequired ? "Rest required" : "");
     }
 }
