@@ -3,13 +3,23 @@ package classes.problem1;
 import java.util.*;
 
 public class PointsTools {
-    public static double calculateDet(Point p1, Point p2, Point p3) {
+    /**
+     * Calculates the determinant of three points.
+     *
+     * @param p1 The first point.
+     * @param p2 The second point.
+     * @param p3 The third point.
+     * @return The determinant of the three points.
+     */
+    public static double calculateDet(Point p1, Point p2, Point p3){
         double result;
+        /*
+        This formula is equivalent to the determinant of the following 3x3 matrix:
 
-//        p1.x p1.y 1
-//        p2.x p2.y 1
-//        p3.x p3.y 1
-
+        | p1.getX()  p1.getY()  1 |
+        | p2.getX()  p2.getY()  1 |
+        | p3.getX()  p3.getY()  1 |
+        */
         result = p1.getX() * p2.getY() +
                 p2.getX() * p3.getY() +
                 p3.getX() * p1.getY() -
@@ -20,14 +30,27 @@ public class PointsTools {
         return result;
     }
 
+    /**
+     * A comparator for comparing the angles of two points with respect to a minimum point.
+     */
     static class PointAngleComparator implements Comparator<Point> {
 
         Point minPoint;
-
+        /**
+         * Constructs a new PointAngleComparator with the specified minimum point.
+         *
+         * @param minPoint The point with the minimum y-coordinate.
+         */
         public PointAngleComparator(Point minPoint) {
             this.minPoint = minPoint;
         }
-
+        /**
+         * Compares the angles of two points with respect to the minimum point.
+         *
+         * @param a The first point.
+         * @param b The second point.
+         * @return -1 if the angle of point a is less than the angle of point b, 1 otherwise.
+         */
         @Override
         public int compare(Point a, Point b) {
 
@@ -37,88 +60,64 @@ public class PointsTools {
             return angleOfA < angleOfB ? -1 : 1;
         }
     }
-
-    public static List<Point> findConvexHull(List<Point> list) {
+    /**
+     * Implementation of Graham's algorithm to find the convex hull of a list of points.
+     * Time complexity O(n log n)
+     *
+     * @param list The list of points.
+     * @return The list of points forming the convex hull.
+     */
+    public static List<Point> findConvexHull(List<Point> list){
 
         Point minPoint = new Point();
 
         minPoint.setY(list.getFirst().getY());
 
-        //Looking for a point with the lowest Y value
-        for (Point p : list) {
-            if (p.getY() < minPoint.getY()) {
+        // Loop over the list of points to find the point with the minimum y-coordinate.
+        for(Point p : list){
+            if(p.getY() < minPoint.getY()){
                 minPoint.setY(p.getY());
                 minPoint.setX(p.getX());
-            } else if (p.getY() == minPoint.getY()) {
-                if (p.getX() < minPoint.getX()) {
+            }else if(p.getY() == minPoint.getY()) {
+                if(p.getX() < minPoint.getX()){
                     minPoint.setY(p.getY());
                     minPoint.setX(p.getX());
                 }
             }
         }
 
-        double shiftX = minPoint.getX(), shiftY = minPoint.getY();
-
-        System.out.println(minPoint + "Minmalny");
-
-//        minPoint.setX(0);
-//        minPoint.setY(0);
-//
-//        //Shifting the coordinate system
-//        for(Point p : list){
-//            p.setX(p.getX() - shiftX);
-//            p.setY(p.getY() - shiftY);
-//        }
-
-        //Sorting by angle
+        // Sort the list of points based on the angle they make with minPoint.
         Collections.sort(list, new PointAngleComparator(minPoint));
 
-//        for(Point p : list){
-//            System.out.println("After shift\n");
-//            System.out.println(Math.atan2(p.getY(), p.getX()));
-//            System.out.println(p);
-//        }
-
+        // Initialize a stack and push the first three points in the sorted list onto the stack.
         Stack<Point> stack = new Stack<>();
 
         stack.push(list.get(0));
         stack.push(list.get(1));
         stack.push(list.get(2));
 
-        for (int i = 3; i < list.size(); i++) {
-            while (calculateDet(stack.get(stack.size() - 2), stack.peek(), list.get(i)) <= 0) {
+        /*
+        Loop over the sorted list.
+        While the angle created by the points second-to-top, top point and the current point
+        dont form a left turn, pop the top point from the stack.
+        */
+        for(int i = 3; i < list.size(); i++){
+            while(calculateDet(stack.get(stack.size() - 2), stack.peek(), list.get(i)) <= 0){
                 stack.pop();
             }
             stack.push(list.get(i));
         }
 
-        for (Point p : stack) {
-            System.out.println("Otoczka" + p);
-        }
+//        for(Point p : stack){
+//            System.out.println("Otoczka" + p);
+//        }
 
+        /*
+        After all points are checked, the points left on the stack form the convex hull of the original list of points.
+        Convert the stack to a list and return it.
+        */
         list = new ArrayList<>(stack);
 
         return list;
     }
-
-//    Outated code, might be useful
-//    public static boolean isWithinTriangle (Point a, Point b, Point c, Point x){
-//
-//        //ABC triangle area
-//        double A1 = calcTriangleArea(a, b, c);
-//        //XBC triangle area
-//        double A2 = calcTriangleArea(x, b, c);
-//        //XAC triangle area
-//        double A3 = calcTriangleArea(a, x, c);
-//        //XAB triangle area
-//        double A4 = calcTriangleArea(a, b, x);
-//
-//        return (A1 == A2 + A3 + A4);
-//    }
-
-//    public static double calcTriangleArea (Point a, Point b, Point c){
-//        return Math.abs(a.getX()*(b.getY() - c.getY()) +
-//                        b.getX()*(c.getY() - a.getY()) +
-//                        c.getX()*(a.getY() - b.getY()))/2;
-//    }
 }
