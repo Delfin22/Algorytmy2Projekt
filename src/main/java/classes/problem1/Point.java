@@ -1,6 +1,9 @@
 package classes.problem1;
 
-public class Point {
+import java.awt.geom.Point2D;
+
+public class Point extends Point2D {
+    private int id;
     private double x,y;
 
     public Point() {
@@ -9,6 +12,7 @@ public class Point {
     public Point(double x, double y) {
         this.x = x;
         this.y = y;
+        setLocation(x,y);
     }
 
     public double getX() {
@@ -21,6 +25,12 @@ public class Point {
 
     public double getY() {
         return y;
+    }
+
+    @Override
+    public void setLocation(double x, double y) {
+        this.x = x;
+        this.y = y;
     }
 
     public void setY(double y) {
@@ -43,6 +53,14 @@ public class Point {
             return false;
         }
         Point point = (Point) obj;
-        return Double.compare(point.x, x) == 0 && Double.compare(point.y, y) == 0;
+        return java.lang.Double.compare(point.x, x) == 0 && java.lang.Double.compare(point.y, y) == 0;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 }
