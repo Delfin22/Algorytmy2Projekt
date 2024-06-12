@@ -46,7 +46,7 @@ public class Flatguy {
 
     @Override
     public String toString() {
-        return String.format("Flatguy{%d %d energy}", number, energy);
+        return String.format("Flatguy$%d %d energy", number, energy);
     }
 
     /**

@@ -41,7 +41,7 @@ public class PointComponent extends JComponent {
                 p.setId(i);
                 g.setColor(Color.DARK_GRAY);
                 g.fillOval((int) p.getX(), (int) p.getY(), 5, 5);
-                g.drawString(Integer.toString(i), (int) p.getX(), (int) p.getY() + 1);
+                g.drawString(String.format("(%d, %d bright)", i, 0), (int) p.getX(), (int) p.getY() + 1);
                 i++;
             }
         }

@@ -48,4 +48,16 @@ public class Landmark {
         this.pos = pos;
         this.brightness = brightness;
     }
+
+    double getX() {
+        return pos.getX();
+    }
+
+    public Point getPos() {
+        return pos;
+    }
+
+    double getY() {
+        return pos.getY();
+    }
 }
