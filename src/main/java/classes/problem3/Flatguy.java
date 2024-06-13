@@ -1,7 +1,5 @@
 package classes.problem3;
 
-import org.algorithmProject.Main;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

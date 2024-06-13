@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
+import static java.awt.geom.Line2D.ptSegDist;
+
 public class PointComponent extends JComponent {
     private List<Point> points;
     private List<Point> hull;
@@ -23,15 +25,40 @@ public class PointComponent extends JComponent {
                         if (e.getPoint().distance(point) < 5) {
                             // Wyświetl współrzędne punktu
                             JOptionPane.showMessageDialog(PointComponent.this,
-                                    "(" + point.getX() + ", " + point.getY() + ")","Współrzędne punktu " + point.getId(),JOptionPane.INFORMATION_MESSAGE);
+                                    "(" + point.getX() + ", " + point.getY() + ")", "Współrzędne punktu " + point.getId(), JOptionPane.INFORMATION_MESSAGE);
                             break;
                         }
+                    }
+                }
+                if (hull != null && hull.size() > 1) {
+                    for (int i = 0; i < hull.size() - 1; i++) {
+                        Point p1 = hull.get(i);
+                        Point p2 = hull.get(i + 1);
+                        if (isPointNearLine(e.getPoint(), p1, p2)) {
+                            double distance = p1.distance(p2);
+                            JOptionPane.showMessageDialog(PointComponent.this,
+                                    "Odległość między punktami " + p1.getId() +" i "+ p2.getId()+" : " + distance, "Odległość między punktami", JOptionPane.INFORMATION_MESSAGE);
+                            return;
+                        }
+                    }
+                    // Sprawdź linię między ostatnim a pierwszym punktem
+                    Point p1 = hull.getLast();
+                    Point p2 = hull.getFirst();
+                    if (isPointNearLine(e.getPoint(), p1, p2)) {
+                        double distance = p1.distance(p2);
+                        JOptionPane.showMessageDialog(PointComponent.this,
+                                "Odległość między punktami " + p1.getId() +" i "+ p2.getId()+" : " + distance, "Odległość między punktami", JOptionPane.INFORMATION_MESSAGE);
                     }
                 }
             }
         });
     }
-
+    private boolean isPointNearLine(java.awt.Point mousePoint, Point p1, Point p2) {
+        // Sprawdź, czy punkt (kliknięcie myszy) jest blisko linii między p1 a p2
+        final double tolerance = 5.0;
+        double distance = ptSegDist(p1.getX(), p1.getY(), p2.getX(), p2.getY(), mousePoint.getX(), mousePoint.getY());
+        return distance < tolerance;
+    }
 
     public void paintComponent(Graphics g){
         int i = 0;
@@ -91,6 +118,9 @@ public class PointComponent extends JComponent {
 
     public List<Point> getPoints() {
         return points;
+    }
+    public List<Point> getHull(){
+        return hull;
     }
 }
 
