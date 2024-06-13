@@ -22,6 +22,9 @@ public class Problem3Application extends JFrame {
     public static Random rand = new Random();
     private List<Flatguy> flatheads = new ArrayList<>();
     private List<Landmark> hull;
+    private WorkSchedule workschedule;
+
+    private List<String> queueForDay;
 
     /*
     public static void main(String[] args) {
@@ -126,24 +129,17 @@ public class Problem3Application extends JFrame {
             filterAllFlatheadsButton.setSelected(true);
         });
         JRadioButton filterWorkersButton = new JRadioButton("All workers");
-        JRadioButton filterCurrentQueueButton = new JRadioButton("Current queue");
-        filterCurrentQueueButton.addActionListener(l -> {
-            System.out.println("Show all current queue");
-        });
         ButtonGroup flatheadsFilter = new ButtonGroup();  // group ensures that only one is selected
         flatheadsFilter.add(filterAllFlatheadsButton);
         flatheadsFilter.add(filterWorkersButton);
-        flatheadsFilter.add(filterCurrentQueueButton);
         filterAllFlatheadsButton.setSelected(true);
 
         JPanel topLeftPanel = new JPanel();
         topLeftPanel.add(filterAllFlatheadsButton);
         topLeftPanel.add(filterWorkersButton);
-        topLeftPanel.add(filterCurrentQueueButton);
 
         filterAllFlatheadsButton.setEnabled(false);
         filterWorkersButton.setEnabled(false);
-        filterCurrentQueueButton.setEnabled(false);
 
         JPanel leftPanel = new JPanel(new BorderLayout());
         leftPanel.add(new JScrollPane(livingFlatguys));
@@ -170,7 +166,9 @@ public class Problem3Application extends JFrame {
         buttonsPanel.setLayout(new GridLayout(2, 3, 5, 5));
 
         JPanel pointCoordinatesPanel = new JPanel();
-        pointCoordinatesPanel.setBorder(BorderFactory.createTitledBorder("Add Point"));
+        // TODO: przy dodawaniu wlacz opcje jezeli mamy juz powyzej 3 punktow
+        // TODO: tak samo przy usuwaniu
+        pointCoordinatesPanel.setBorder(BorderFactory.createTitledBorder("Dodaj punkt"));
         pointCoordinatesPanel.setPreferredSize(new Dimension(300, 100));
         pointCoordinatesPanel.setLayout(new GridLayout(3, 2, 5, 5));
         JLabel xCords = new JLabel("Współrzędne x");
@@ -186,26 +184,6 @@ public class Problem3Application extends JFrame {
         JButton addPointButton = new JButton();
         addPointButton.setText("<html><center>Dodaj punkt<br>do mapy</center></html>");
         addPointButton.setPreferredSize(new Dimension(250, 50));
-        addPointButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                try {
-                    double x = Double.parseDouble(inputXfield.getText());
-                    double y = Double.parseDouble(inputYfield.getText());
-                    if (x > borderX || x < 0 || y > borderY || y < 0)
-                        throw new IllegalArgumentException();
-                    Point currPoint = new Point(x, y);
-
-                    accessPointComponent(tabbedPane, 0).addPoint(currPoint);
-                } catch (Exception exception) {
-                    JOptionPane.showMessageDialog(null, "Niewłasciwe współrzędne!", "Ostrzeżenie", JOptionPane.WARNING_MESSAGE);
-                } finally {
-                    inputXfield.setText("");
-                    inputYfield.setText("");
-                }
-            }
-        });
-
         pointCoordinatesPanel.add(addPointButton);
 
         JButton removePointButton = new JButton();
@@ -271,6 +249,9 @@ public class Problem3Application extends JFrame {
                 if (filterWorkersButton.isSelected()) {
                     String[] strRepresentation = flatheads.stream()
                             .filter(flatguy -> flatguy.getEnergy() >= requiredEnergyBar.getValue())
+                            .sorted((f1, f2) -> {
+                                return Integer.compare(f2.getEnergy(), f1.getEnergy());
+                            })
                             .map(Flatguy::toString).toList().toArray(new String[flatheads.size()]);
                     livingFlatguys.setListData(strRepresentation);
                 }
@@ -279,6 +260,9 @@ public class Problem3Application extends JFrame {
         filterWorkersButton.addActionListener(l -> {
             String[] strRepresentation = flatheads.stream()
                     .filter(flatguy -> flatguy.getEnergy() >= requiredEnergyBar.getValue())
+                    .sorted((f1, f2) -> {
+                        return Integer.compare(f2.getEnergy(), f1.getEnergy());
+                    })
                     .map(Flatguy::toString).toList().toArray(new String[flatheads.size()]);
             livingFlatguys.setListData(strRepresentation);
         });
@@ -287,7 +271,7 @@ public class Problem3Application extends JFrame {
         // liczba plaszakow
         // wymagana energia do bycia pracownikiem
         JPanel settingsFrame = new JPanel();
-        TitledBorder titledBorder = BorderFactory.createTitledBorder("Settings");
+        TitledBorder titledBorder = BorderFactory.createTitledBorder("Ustawienia Swiata");
         settingsFrame.setBorder(titledBorder);
         settingsFrame.setLayout(new GridLayout(3, 3, 10, 5));
         settingsFrame.add(new JLabel("Liczba punktow"));
@@ -330,7 +314,7 @@ public class Problem3Application extends JFrame {
                 // additionally mark stops as red
                 // set landmarkcomponent to i-th position
 
-                WorkSchedule workschedule = new WorkSchedule(flatheads, hull, tabbedPane.getTabCount() - 1, requiredEnergyBar.getValue());  // -1 because main hull tab
+                workschedule = new WorkSchedule(flatheads, hull, tabbedPane.getTabCount() - 1, requiredEnergyBar.getValue());  // -1 because main hull tab
                 WorkDay[] schedule = workschedule.getSchedule();
 
                 // TODO: when no worker is available set title to no worker available
@@ -350,6 +334,9 @@ public class Problem3Application extends JFrame {
                     landmarkComponent.setHull(hull);
                     landmarkComponent.setWorkDay(schedule[i]);
                 }
+
+
+                filterWorkersButton.setEnabled(true);
             }
         });
 
@@ -366,12 +353,19 @@ public class Problem3Application extends JFrame {
 
                 filterAllFlatheadsButton.setSelected(true);
                 filterAllFlatheadsButton.setEnabled(true);
-                filterWorkersButton.setEnabled(true);
-                filterCurrentQueueButton.setEnabled(true);
+                filterWorkersButton.setEnabled(false);
 
                 generateHullButton.setEnabled(true);
                 addLights.setEnabled(false);
                 prepareScheduleButton.setEnabled(false);
+
+                // remove tab names
+                for (int i = 1; i < tabbedPane.getTabCount(); ++i) {
+                    tabbedPane.setEnabledAt(i, false);
+                    tabbedPane.setTitleAt(i, String.format("Day %d", i));
+                    LandmarkComponent landmarkComponent = accessLandmarkComponent(tabbedPane, i);
+                    landmarkComponent.setHull(hull);
+                }
             }
         });
 
@@ -399,7 +393,6 @@ public class Problem3Application extends JFrame {
                 // disable radio buttons
                 filterAllFlatheadsButton.setEnabled(false);
                 filterWorkersButton.setEnabled(false);
-                filterCurrentQueueButton.setEnabled(false);
 
                 addLights.setEnabled(false);
                 prepareScheduleButton.setEnabled(false);
@@ -432,6 +425,28 @@ public class Problem3Application extends JFrame {
                 prepareScheduleButton.setEnabled(true);
             }
         });
+
+
+        addPointButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                try {
+                    double x = Double.parseDouble(inputXfield.getText());
+                    double y = Double.parseDouble(inputYfield.getText());
+                    if (x > borderX || x < 0 || y > borderY || y < 0)
+                        throw new IllegalArgumentException();
+                    Point currPoint = new Point(x, y);
+
+                    accessPointComponent(tabbedPane, 0).addPoint(currPoint);
+                } catch (Exception exception) {
+                    JOptionPane.showMessageDialog(null, "Niewłasciwe współrzędne!", "Ostrzeżenie", JOptionPane.WARNING_MESSAGE);
+                } finally {
+                    inputXfield.setText("");
+                    inputYfield.setText("");
+                }
+            }
+        });
+
 
         generateHullButton.setEnabled(false);
         addLights.setEnabled(false);

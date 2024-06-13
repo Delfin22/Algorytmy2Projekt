@@ -97,13 +97,13 @@ public class problem1Application extends JFrame {
         JPanel numPointsPanel = new JPanel();
         numPointsPanel.setLayout(new BorderLayout());
         TitledBorder numPointsBorder = BorderFactory.createTitledBorder("ILOŚĆ PUNKTÓW");
-        numPointsBorder.setTitleFont(new Font("Arial",Font.PLAIN,17));
+        numPointsBorder.setTitleFont(new Font("Arial",Font.PLAIN,12));
         numPointsBorder.setTitlePosition(TitledBorder.ABOVE_TOP);
         numPointsBorder.setTitleJustification(TitledBorder.CENTER);
         numPointsPanel.setBorder(numPointsBorder);
 
         JLabel numPointsLabel = new JLabel("20");
-        numPointsLabel.setPreferredSize(new Dimension(160,50));
+        numPointsLabel.setPreferredSize(new Dimension(120,50));
         numPointsLabel.setFont(new Font("Arial",Font.PLAIN,25));
         numPointsLabel.setHorizontalAlignment(JLabel.CENTER);
         numPointsLabel.setHorizontalAlignment(JLabel.CENTER);
@@ -127,7 +127,7 @@ public class problem1Application extends JFrame {
 
         //button for generating world
         JButton generateWorldButton = new JButton();
-        generateWorldButton.setFont(new Font("Arial",Font.PLAIN,20));
+        generateWorldButton.setFont(new Font("Arial",Font.PLAIN,14));
         generateWorldButton.setText("<html><center>Stwórz świat<br>płaszczaków</center></html>");
         generateWorldButton.addActionListener(new ActionListener() {
             @Override
@@ -137,7 +137,7 @@ public class problem1Application extends JFrame {
         });
 
         JButton generateHullButton = new JButton();
-        generateHullButton.setFont(new Font("Arial",Font.PLAIN,20));
+        generateHullButton.setFont(new Font("Arial",Font.PLAIN,14));
         generateHullButton.setText("<html><center>Stwórz<br>ogrodzenie</center></html>");
         generateHullButton.addActionListener(new ActionListener() {
             @Override
@@ -152,7 +152,7 @@ public class problem1Application extends JFrame {
 
         JButton clearWorldButton = new JButton();
         clearWorldButton.setText("<html><center>Usuń wszystkie<br>punkty</center></html>");
-        clearWorldButton.setFont(new Font("Arial",Font.PLAIN,20));
+        clearWorldButton.setFont(new Font("Arial",Font.PLAIN,14));
         clearWorldButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -160,10 +160,26 @@ public class problem1Application extends JFrame {
             }
         });
 
+        JButton totalLengthButton = new JButton();
+        totalLengthButton.setText("<html><center>Oblicz całkowitą<br>długość ogrodzenia</center></html>");
+        totalLengthButton.setFont(new Font("Arial",Font.PLAIN,14));
+        totalLengthButton.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if(pointComponent.getHull().isEmpty()){
+                    JOptionPane.showMessageDialog(null, "Najpierw należy stworzyć ogrodzenie!", "Ostrzeżenie", JOptionPane.WARNING_MESSAGE);
+                }
+                else{
+                    JOptionPane.showMessageDialog(null, PointsTools.calcWallLenght(pointComponent.getHull()), "Informacja", JOptionPane.INFORMATION_MESSAGE);
+                }
+            }
+        });
+
 
         buttonsPanel.add(generateWorldButton);
         buttonsPanel.add(generateHullButton);
         buttonsPanel.add(clearWorldButton);
+        buttonsPanel.add(totalLengthButton);
         //settings of main panels
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.gridx = 0;
