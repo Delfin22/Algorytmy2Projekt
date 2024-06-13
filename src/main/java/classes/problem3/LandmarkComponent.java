@@ -51,6 +51,32 @@ public class LandmarkComponent extends JComponent {
         if (!hull.isEmpty()) {
             int j = 0;  // stopPoint index
             int i = 0;  // all hull point index
+            if (workday.guard == null) {
+                // paint only hull
+                Landmark p = hull.get(i);
+                g.setColor(Color.DARK_GRAY);
+                g.fillOval((int) p.getX() + padding, (int) p.getY() + padding, 5, 5);
+                g.drawString(Integer.toString(i), (int) p.getX() + padding, (int) p.getY() + 1 + padding);
+                g.drawString(String.format("( %d, %d bright)", i, hull.get(i).getBrightness()), (int) hull.get(i).getX() + padding, (int) hull.get(i).getY() + 1 + padding);
+
+                for (i = 1; i < hull.size(); i++) {
+                    g.setColor(Color.darkGray);
+                    g.drawLine((int) hull.get(i - 1).getX() + padding,
+                            (int) hull.get(i - 1).getY() + padding,
+                            (int) hull.get(i).getX() + padding,
+                            (int) hull.get(i).getY() + padding);
+                    g.fillOval((int) hull.get(i).getX() + padding, (int) hull.get(i).getY() + padding, 5, 5);
+                    g.drawString(String.format("( %d, %d bright)", i, hull.get(i).getBrightness()), (int) hull.get(i).getX() + padding, (int) hull.get(i).getY() + 1 + padding);
+                }
+
+                g.drawLine((int) hull.getLast().getX() + padding,
+                        (int) hull.getLast().getY() + padding,
+                        (int) hull.getFirst().getX() + padding,
+                        (int) hull.getFirst().getY() + padding);
+                return;
+            }
+
+
             Landmark p = hull.get(i);
             g.setColor(Color.DARK_GRAY);
             g.fillOval((int) p.getX() + padding, (int) p.getY() + padding, 5, 5);

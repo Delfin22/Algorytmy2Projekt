@@ -47,11 +47,15 @@ public class WorkSchedule {
      * @param stopPoints landmarks of build wall that will be guarded
      * @param ndays      number of schedule days
      */
-    public WorkSchedule(List<Flatguy> residents, List<Landmark> stopPoints, int ndays) {
+    public WorkSchedule(List<Flatguy> residents, List<Landmark> stopPoints, int ndays, int requiredEnergy) {
         wall = stopPoints;
-        workers = new Workers(residents, WorkSchedule.REQUIRED_ENERGY);
+        workers = new Workers(residents, requiredEnergy);
 
         schedule = prepareSchedule(ndays);
+    }
+
+    public WorkSchedule(List<Flatguy> residents, List<Landmark> stopPoints, int ndays) {
+        this(residents, stopPoints, ndays, WorkSchedule.REQUIRED_ENERGY);
     }
 
     /**
