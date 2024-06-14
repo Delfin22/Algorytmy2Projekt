@@ -59,7 +59,8 @@ public class PointComponent extends JComponent {
                 p.setId(i);
                 g.setColor(Color.DARK_GRAY);
                 g.fillOval((int) p.getX() + padding, (int) p.getY() + padding, 5, 5);
-                g.drawString(Integer.toString(i), (int) p.getX() + padding, (int) p.getY() + 1 + padding);
+
+                // g.drawString(Integer.toString(i), (int) p.getX() + padding, (int) p.getY() + 1 + padding);
                 i++;
             }
         }
@@ -78,8 +79,9 @@ public class PointComponent extends JComponent {
                     (int) hull.getFirst().getY() + padding);
 
             if (hullWithLights.size() == hull.size()) {
+                g.setColor(Color.DARK_GRAY);
                 for (i = 0; i < hull.size(); ++i) {
-                    g.drawString(String.format("(%d, %d bright)", i, hullWithLights.get(i).getBrightness()), (int) hull.get(i).getX() + padding, (int) hull.get(i).getY() + 1 + padding);
+                    g.drawString(String.format("( %d, %d bright)", i, hullWithLights.get(i).getBrightness()), (int) hull.get(i).getX() + padding, (int) hull.get(i).getY() + 1 + padding);
                 }
 
             }

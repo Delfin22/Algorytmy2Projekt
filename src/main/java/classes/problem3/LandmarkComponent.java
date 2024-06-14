@@ -9,6 +9,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class LandmarkComponent extends JComponent {
     private final int width;
@@ -56,7 +57,6 @@ public class LandmarkComponent extends JComponent {
                 Landmark p = hull.get(i);
                 g.setColor(Color.DARK_GRAY);
                 g.fillOval((int) p.getX() + padding, (int) p.getY() + padding, 5, 5);
-                g.drawString(Integer.toString(i), (int) p.getX() + padding, (int) p.getY() + 1 + padding);
                 g.drawString(String.format("( %d, %d bright)", i, hull.get(i).getBrightness()), (int) hull.get(i).getX() + padding, (int) hull.get(i).getY() + 1 + padding);
 
                 for (i = 1; i < hull.size(); i++) {
@@ -80,7 +80,6 @@ public class LandmarkComponent extends JComponent {
             Landmark p = hull.get(i);
             g.setColor(Color.DARK_GRAY);
             g.fillOval((int) p.getX() + padding, (int) p.getY() + padding, 5, 5);
-            g.drawString(Integer.toString(i), (int) p.getX() + padding, (int) p.getY() + 1 + padding);
             if (hull.get(i).getPos().equals(workday.stops.get(j))) {
                 g.setColor(Color.RED);
                 ++j;
@@ -97,7 +96,15 @@ public class LandmarkComponent extends JComponent {
                         (int) hull.get(i).getY() + padding);
                 g.setColor(Color.DARK_GRAY);
                 g.fillOval((int) hull.get(i).getX() + padding, (int) hull.get(i).getY() + padding, 5, 5);
-                g.drawString(String.format("( %d, %d bright)", i, hull.get(i).getBrightness()), (int) hull.get(i).getX() + padding, (int) hull.get(i).getY() + 1 + padding);
+                // TODO: check if we have it in stop points
+
+                int finalI = i;
+                var l = workday.getSchedule().stream().filter(r -> {
+                    return r.landmark().getPos().equals( hull.get(finalI).getPos());
+                }).toList();
+                if (l.isEmpty()) {
+                    g.drawString(String.format("( %d, %d bright)", i, hull.get(i).getBrightness()), (int) hull.get(i).getX() + padding, (int) hull.get(i).getY() + 1 + padding);
+                }
             }
 
             g.setColor(Color.DARK_GRAY);
