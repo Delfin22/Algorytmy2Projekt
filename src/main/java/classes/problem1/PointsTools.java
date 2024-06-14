@@ -60,18 +60,8 @@ public class PointsTools {
             return angleOfA < angleOfB ? -1 : 1;
         }
     }
-    /**
-     * Implementation of Graham's algorithm to find the convex hull of a list of points.
-     * Time complexity O(n log n)
-     *
-     * @param list The list of points.
-     * @return The list of points forming the convex hull.
-     */
-    public static List<Point> findConvexHull(List<Point> list){
 
-        // If there is only between 1 and 3 points then those points form the convex hull.
-        if(list.size() < 4 && list.size() > 0)
-            return list;
+    public static Point findMinPoint(List<Point> list){
 
         Point minPoint = new Point();
 
@@ -91,6 +81,23 @@ public class PointsTools {
             }
         }
 
+        return minPoint;
+    }
+    /**
+     * Implementation of Graham's algorithm to find the convex hull of a list of points.
+     * Time complexity O(n log n)
+     *
+     * @param list The list of points.
+     * @return The list of points forming the convex hull.
+     */
+    public static List<Point> findConvexHull(List<Point> list){
+
+        // If there is only between 1 and 3 points then those points form the convex hull.
+        if(list.size() < 4 && list.size() > 0)
+            return list;
+
+        Point minPoint = findMinPoint(list);
+
         // Sort the list of points based on the angle they make with minPoint.
         Collections.sort(list, new PointAngleComparator(minPoint));
 
@@ -107,7 +114,7 @@ public class PointsTools {
          dont form a left turn, pop the top point from the stack.
         */
         for(int i = 3; i < list.size(); i++){
-            while(stack.size() > 1 && calculateDet(stack.get(stack.size() - 2), stack.peek(), list.get(i)) <= 0){
+            while(stack.size() > 1 && calculateDet(stack.get(stack.size() - 2), stack.peek(), list.get(i)) <= 0) {
                 stack.pop();
             }
             stack.push(list.get(i));
@@ -164,5 +171,34 @@ public class PointsTools {
             totalWallLenght += calcDistance(list.get(i), list.get((i + 1 == list.size()) ? 0 : i + 1));
 
         return totalWallLenght;
+    }
+
+    /**
+     * This function generates random edges between points in a list.
+     * The function shuffles the input list of points and then adds an edge
+     * between each consecutive pair of points in the shuffled list. It also adds an edge
+     * between the last point in the shuffled list and the first point to form a closed loop.
+     *
+     * @param points A list of Point objects representing the points in a graph.
+     * @return A list of Point objects in the order they were connected.
+     *
+     */
+    public static List<Point> generateRandomEdges(List<Point> points) {
+        List<Point> shuffledPoints = new ArrayList<>(points);
+        Collections.shuffle(shuffledPoints);
+
+        for (int i = 0; i < shuffledPoints.size() - 1; i++) {
+            Point currentPoint = shuffledPoints.get(i);
+            Point nextPoint = shuffledPoints.get(i + 1);
+            currentPoint.addNeighbour(nextPoint);
+            nextPoint.addNeighbour(currentPoint); // Add this line
+        }
+
+        Point firstPoint = shuffledPoints.get(0);
+        Point lastPoint = shuffledPoints.get(shuffledPoints.size() - 1);
+        lastPoint.addNeighbour(firstPoint);
+        firstPoint.addNeighbour(lastPoint); // Add this line
+
+        return shuffledPoints;
     }
 }

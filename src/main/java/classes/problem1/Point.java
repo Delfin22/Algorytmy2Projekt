@@ -1,12 +1,33 @@
 package classes.problem1;
 
 import java.awt.geom.Point2D;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Point extends Point2D {
     private int id;
     private double x,y;
+    private Map<Point, java.lang.Double> neighbours = new HashMap<>();
+    private double distance = java.lang.Double.MAX_VALUE;
+
+    public double getDistance() {
+        return distance;
+    }
+
+    public void setDistance(double distance) {
+        this.distance = distance;
+    }
 
     public Point() {
+    }
+
+    public void addNeighbour(Point point){
+        double dist = PointsTools.calcDistance(this, point);
+        neighbours.put(point, dist);
+    }
+
+    public Map<Point, java.lang.Double> getNeighbours() {
+        return neighbours;
     }
 
     public Point(double x, double y) {
@@ -63,4 +84,5 @@ public class Point extends Point2D {
     public void setId(int id) {
         this.id = id;
     }
+
 }

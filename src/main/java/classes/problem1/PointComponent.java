@@ -6,6 +6,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 import static java.awt.geom.Line2D.ptSegDist;
@@ -13,9 +14,11 @@ import static java.awt.geom.Line2D.ptSegDist;
 public class PointComponent extends JComponent {
     private List<Point> points;
     private List<Point> hull;
+    private List<Point> shortestPath;
     public PointComponent() {
         this.points = new ArrayList<>();
         this.hull = new ArrayList<>();
+        this.shortestPath = new ArrayList<>();
         addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -69,6 +72,10 @@ public class PointComponent extends JComponent {
                 g.setColor(Color.DARK_GRAY);
                 g.fillOval((int) p.getX(), (int) p.getY(), 5, 5);
                 g.drawString(String.format("(%d, %d bright)", i, 0), (int) p.getX(), (int) p.getY() + 1);
+                g.setColor(Color.BLACK);
+                for (Point neighbour : p.getNeighbours().keySet()) {
+                    g.drawLine((int) p.getX(), (int) p.getY(), (int) neighbour.getX(), (int) neighbour.getY());
+                }
                 i++;
             }
         }
@@ -86,29 +93,69 @@ public class PointComponent extends JComponent {
                         (int) hull.getFirst().getX(),
                         (int) hull.getFirst().getY());
         }
+        if(!shortestPath.isEmpty()) {
+            g.setColor(Color.RED);
+            for (i = 1; i < shortestPath.size(); i++) {
+                g.drawLine((int) shortestPath.get(i - 1).getX(),
+                        (int) shortestPath.get(i - 1).getY(),
+                        (int) shortestPath.get(i).getX(),
+                        (int) shortestPath.get(i).getY());
+            }
+            g.setColor(Color.GREEN);
+            g.fillOval((int) shortestPath.get(0).getX(), (int) shortestPath.get(0).getY(), 5, 5);
+            g.fillOval((int) shortestPath.get(shortestPath.size() - 1).getX(), (int) shortestPath.get(shortestPath.size() - 1).getY(), 5, 5);
+        }
+
     }
 
+    private void calculateShortestPath() {
+        if (!points.isEmpty()) {
+            Point source = points.get(new Random().nextInt(points.size()));
+            Point target = PointsTools.findMinPoint(points);
+            Dijkstra dijkstra = new Dijkstra();
+            shortestPath = dijkstra.shortestPath(source, target, points);
+        }
+    }
 
     public void setPoints(List<Point> points) {
-        this.points = points;
-        this.hull = new ArrayList<>();
+        if (points != null && !points.isEmpty()) {
+            this.points = points;
+            this.hull = new ArrayList<>();
+            PointsTools.generateRandomEdges(points);
+            calculateShortestPath();
+        }
         repaint();
     }
+
     public void addPoint(Point point){
         points.add(point);
+        Point randomNeighbour = points.get(new Random().nextInt(points.size()));
+        point.addNeighbour(randomNeighbour);
+        randomNeighbour.addNeighbour(point);
+        if(!hull.isEmpty())
+            hull = PointsTools.findConvexHull(points);
+        calculateShortestPath();
         repaint();
     }
     public void removeLastPoint(){
         if(!points.isEmpty()) {
+            Point tmpPoint = points.getLast();
             points.removeLast();
-            hull.clear();
+            for (Point point : points) {
+                point.getNeighbours().remove(tmpPoint);
+            }
+            calculateShortestPath();
+            //hull.clear();
+            if(!hull.isEmpty())
+                hull = PointsTools.findConvexHull(points);
             repaint();
         }
     }
-
     public void clearPoints(){
         points.clear();
         hull.clear();
+        shortestPath.clear();
+        //edges.clear();
         repaint();
     }
     public void setHull(){
