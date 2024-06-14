@@ -183,7 +183,7 @@ public class PointsTools {
      * @return A list of Point objects in the order they were connected.
      *
      */
-    public static List<Point> generateRandomEdges(List<Point> points) {
+    public static void generateRandomEdges(List<Point> points) {
         List<Point> shuffledPoints = new ArrayList<>(points);
         Collections.shuffle(shuffledPoints);
 
@@ -191,14 +191,12 @@ public class PointsTools {
             Point currentPoint = shuffledPoints.get(i);
             Point nextPoint = shuffledPoints.get(i + 1);
             currentPoint.addNeighbour(nextPoint);
-            nextPoint.addNeighbour(currentPoint); // Add this line
+            nextPoint.addNeighbour(currentPoint);
         }
 
-        Point firstPoint = shuffledPoints.get(0);
-        Point lastPoint = shuffledPoints.get(shuffledPoints.size() - 1);
+        Point firstPoint = shuffledPoints.getFirst();
+        Point lastPoint = shuffledPoints.getLast();
         lastPoint.addNeighbour(firstPoint);
-        firstPoint.addNeighbour(lastPoint); // Add this line
-
-        return shuffledPoints;
+        firstPoint.addNeighbour(lastPoint);
     }
 }

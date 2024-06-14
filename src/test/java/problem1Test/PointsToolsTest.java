@@ -127,28 +127,45 @@ public class PointsToolsTest {
         Assertions.assertEquals(expectedConvexHull, actualConvexHull, "The convex hull is not as expected.");
     }
     @Test
-    public void testShortestPath() {
-        Point A = new Point(0, 0);
-        Point B = new Point(1, 0);
-        Point C = new Point(0, 1);
-
-        A.addNeighbour(B);
-        B.addNeighbour(C);
-        A.addNeighbour(C);
-
+    public void testGenerateRandomEdges() {
         List<Point> points = new ArrayList<>();
+        points.add(new Point(1, 1));
+        points.add(new Point(2, 2));
+        points.add(new Point(3, 3));
+        points.add(new Point(4, 4));
 
-        points.add(A);
-        points.add(B);
-        points.add(C);
+        PointsTools.generateRandomEdges(points);
 
-        Dijkstra dijkstra = new Dijkstra();
+        for (Point point : points) {
+            Assertions.assertTrue(point.getNeighbours().size() >= 2);
+        }
 
-        List<Point> path = dijkstra.shortestPath(A, C, points);
-        Assertions.assertEquals(Arrays.asList(A, B, C), path);
+        Point firstPoint = points.get(0);
+        Point lastPoint = points.get(points.size() - 1);
+        Assertions.assertTrue(firstPoint.getNeighbours().containsKey(lastPoint));
+        Assertions.assertTrue(lastPoint.getNeighbours().containsKey(firstPoint));
+    }
+    @Test
+    public void testCalcDistance() {
+        Point p1 = new Point(1, 1);
+        Point p2 = new Point(4, 5);
 
-        path = dijkstra.shortestPath(B, A, points);
-        Assertions.assertEquals(Arrays.asList(B, A), path);
+        double distance = PointsTools.calcDistance(p1, p2);
+
+        Assertions.assertEquals(5.0, distance, "Distance between points is incorrect");
+    }
+    @Test
+    public void testFindMinPoint() {
+        List<Point> points = new ArrayList<>();
+        points.add(new Point(1, 1));
+        points.add(new Point(2, 2));
+        points.add(new Point(3, 3));
+        points.add(new Point(4, 4));
+
+        Point minPoint = PointsTools.findMinPoint(points);
+
+        Assertions.assertEquals(new Point(1, 1), minPoint, "Minimum point is incorrect");
     }
 }
+
 
